@@ -88,6 +88,13 @@ provider prefix produce a save-time warning. See the
 [Bedrock model IDs reference](https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html)
 for available identifiers.
 
+An ARN is sent exactly as entered. The node reads the model's vendor from a
+foundation-model or inference-profile ARN (`.../foundation-model/anthropic.claude-...`,
+`.../inference-profile/us.anthropic.claude-...`) and passes it to langchain-aws, which
+needs it to format the request. A provisioned, custom or imported model ARN names no
+vendor, so langchain-aws cannot build a client for it and the save-time check reports
+"Model provider should be supplied when passing a model ARN as model_id".
+
 ### Prompt caching
 
 Claude models on Bedrock can reuse the start of a prompt they have already read, at

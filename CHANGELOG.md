@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **docker**: the engine image is built FROM a shared `engine-base` and runs as uid 1000 (was a system user, uid 999). An existing `/opt/data` volume has to be handed over once: `docker run --rm -v rocketride-data:/opt/data alpine chown -R 1000:1000 /opt/data`. The engine now refuses to start, naming that command, when its data directory is not writable.
 
 ### Fixed
+- **nodes**: `llm_bedrock` sends an ARN or an already-prefixed model id as typed at run time, as the save-time check and README already did (no more `us.us.anthropic...` or `us.arn:aws:bedrock:...`), and passes the vendor named by a foundation-model or inference-profile ARN to langchain-aws (#2531).
 - **ai**: the shared embedding factory imports providers from the shipped `nodes` package (#2587).
 - **nodes**: PostgreSQL vector stores accept document metadata fields outside the SQL schema and roll back failed chunk replacements, preserving existing documents (#2587).
 

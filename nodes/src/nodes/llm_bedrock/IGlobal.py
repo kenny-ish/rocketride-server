@@ -75,23 +75,13 @@ class IGlobal(IGlobalBase):
 
             # Test AWS credentials and model availability using a minimal call
             try:
-                # Add region prefix when not already present or ARN
-                test_model = model or ''
-                if (
-                    test_model
-                    and not test_model.startswith('arn:')
-                    and not re.match(r'^(us\.|eu\.|apac\.)', test_model)
-                ):
-                    model_prefix = 'us.'
-                    if region and region[:2] == 'eu':
-                        model_prefix = 'eu.'
-                    elif region and region[:2] == 'ap':
-                        model_prefix = 'apac.'
-                    test_model = model_prefix + test_model
+                # Build the model id the same way the chat client does, so what the
+                # probe checks is what the pipeline sends
+                from .bedrock import bedrock_model_args
 
                 # Test with minimal API call (limit output to minimal to avoid spend)
                 llm = ChatBedrock(
-                    model=test_model,
+                    **bedrock_model_args(model, region),
                     aws_access_key_id=accessKey,
                     aws_secret_access_key=secretKey,
                     region=region,
